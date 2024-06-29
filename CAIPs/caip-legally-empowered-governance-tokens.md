@@ -24,31 +24,30 @@ We have the opportunity to create a standard that will allow interoperability ac
 
 ## Specification
 <!--The technical specification should describe the standard in detail. The specification should be detailed enough to allow competing, interoperable implementations. -->
-Our interface extends ERC-173 & ERC-721 to provide owner abilities to all significant functions in the contract.
-It is important to note that the address of the owner be someone that can be held accountable and will not act unless direct to do so by the powers that be.
-This same pattern must also be applied to any cooresponding token referenced as a fractional representation.
+Our interface extends ERC-173, ERC-721 & ERC-20 to provide owner abilities to all significant functions in the contract which can be delegated to a legal representative, a DAO or compliance officer.
+It is important to note that the address of the owner be someone that can be held accountable and will not act unless direct to do so by the powers that be, in it's respective jurisdiction.
+This same pattern will also be applied to any cooresponding token referenced as a fractional representation. When possible have only one function that can be enhanced with this admin capability, but in cases where it cannot create a mirror function with _owner appended.
 ```
-function *_owner (){
-    // place duplication of contract function here with any needed alterations for owner to execute
-};
+    function *_owner (){
+        // place duplication of contract function here with any needed alterations for owner to execute
+    };
 ```
-It will also include a "lock" function that will lock the metadata of an NFT to prevent any future tampering at a certain point:
-```
-function lock onlyOwner(id){
-    // updates a mapping to be used in a "onlyUnlocked" modifier that restricts the updaing of metadata in the _setTokenURI function used in ERC-721
-};
-```
+There will be a functions to allow for locking, unlocking, pausing, unpausing (the entire contract as well as individual tokens)
+
 There will be some additional public variables, such as the URI for the attached legal document. 
 While an attached ERC-20, or ERC-1155 token is not neccessary in all instances, it is likely that each LEGT NFT will be paired with a token that represents fractional representation of the rights & responsibilities descirbed in the legal document attached.  
 In which case it should be described as a public variable so that it's value can be used in other contracts that reference it.
 ```
-string public documentURI; // the legal documentation linking the token to the real world asset
-string public ownerInfo; // identifying information for who the jurisdictional admin is for the token, such as a name, address, phone number, email etc
-string public status; // review | verified | revoked | archive - used to identify how the token sits in respect to it's jurisdictional compliance.
-
-string public linkedToken; // optional address of token.  This will be present on both the NFT and it's linkedToken so anyone can verify a 1:1 relationship.
-string public linkedTokenStandard; // optional to allow for contract logic as needed, could use "supportsInterface" as well.
+	struct NFTData {
+		string documentURI; // the legal documentation linking the token to the real world asset
+		string ownerInfo; // identifying information for who the jurisdictional admin is for the token
+		string status;  // review | verified | revoked | archive etc
+		string linkedToken; // optional address of token to verify a 1:1 relationship
+		string linkedTokenStandard; // optional to allow for contract logic as needed with supportsInterface
+		bool locked;
+	}
 ```
+It will be best practice for the owner to backup the data as often as deemed appropriate off chain incase there is a catastrophic event.
 There will most likely be sub-standards that will be defined, such as what attributes to include in the metadata of the NFT for specific asset classes.
 An example of this is for any real estate token to have a longitude & latitude defined using the OpenSea attribute standard. 
 These standards will most likely vary from jurisdiction to jurisdiction and can be re-defined as needed.  A governing board will most likely help curate these similar to the pattern CAIP / EIP uses.
